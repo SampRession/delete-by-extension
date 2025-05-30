@@ -80,6 +80,7 @@ pkg_uninstall() {
 
 # Fermeture du programme
 quit() {
+    echo
     echo "=====   FIN DU PROGRAMME   ====="
     echo
     echo "Appuyer sur [ENTRÉE] pour quitter..."
