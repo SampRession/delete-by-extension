@@ -9,11 +9,12 @@ extensions_file="./allowed_extensions.md"
 pkg_check_install() {
     if apt list --installed | grep "zenity"; then
         echo "=== Zenity est déjà installé ==="
-        zenity_state=true
     else
         echo "=== Zenity n'est pas installé, installation... ==="
         sudo apt-get install zenity
+        zenity_state=true
     fi
+    sleep 1.5
     echo
 }
 
@@ -21,16 +22,33 @@ pkg_check_install() {
 search_dir_prompt() {
     echo
     echo "=== Choisir le dossier source pour la recherche des fichiers... ==="
+    echo "Appuyer sur [ENTRÉE] pour ouvrir l'explorateur..."
+    read -r
     source_dir=$(zenity --file-selection --directory)
-    echo "\nDossier source: $source_dir"
+    if [ -z "$source_dir" ]; then
+        echo "=== ERREUR: Un dossier source pour la recherche est nécessaire ==="
+        sleep 2
+        exit 1
+    fi
+    echo
+    echo "Dossier source: $source_dir"
 }
 
 # Choix du dossier de sauvegarde
 backup_dir_prompt() {
     echo
-    echo "Choisir le dossier de destination pour la sauvegarde des fichiers"
+    echo "=== Choisir le dossier de destination pour la sauvegarde des fichiers ==="
+    echo "Appuyer sur [ENTRÉE] pour ouvrir l'explorateur..."
+    read -r
+    sleep 2
     backup_dir=$(zenity --file-selection --directory)
-    echo "\nDossier de sauvegarde: $backup_dir"
+    if [ -z "$backup_dir" ]; then
+        echo "=== ERREUR: Un dossier cible pour la sauvegarde est nécessaire ==="
+        sleep 2
+        exit 1
+    fi
+    echo
+    echo "Dossier de sauvegarde: $backup_dir"
 }
 
 # Construction de la commande find
@@ -47,8 +65,8 @@ build_find_cmd() {
 
 # Lancement de la commande finale
 run_find_cmd() {
-    eval $find_cmd | while read -r file; do
-        cp $file $backup_dir
+    eval "$find_cmd" | while read -r file; do
+        cp "$file" "$backup_dir"
         echo "File: \"$file\" saved"
     done
 }
@@ -57,6 +75,7 @@ run_find_cmd() {
 pkg_uninstall() {
     if $zenity_state; then
         echo
+        echo "=== Désinstallation de Zenity ==="
         sudo apt-get remove zenity
     fi
 }
