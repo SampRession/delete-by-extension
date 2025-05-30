@@ -7,7 +7,7 @@ extensions_file="./allowed_extensions.md"
 
 # Vérif si Zenity est installé
 pkg_check_install() {
-    if apt list --installed | grep "zenity"; then
+    if apt list --installed | grep "zenity" >/dev/null; then
         echo "=== Zenity est déjà installé ==="
     else
         echo "=== Zenity n'est pas installé, installation... ==="
@@ -15,7 +15,6 @@ pkg_check_install() {
         zenity_state=true
     fi
     sleep 1.5
-    echo
 }
 
 # Choix du dossier de recherche
@@ -90,8 +89,8 @@ quit() {
 
 # Fonction principale
 main() {
-    echo "=====   RÉCUPÉRATION DES FICHIERS   ====="
     echo
+    echo "=====   RÉCUPÉRATION DES FICHIERS   ====="
     pkg_check_install
     search_dir_prompt
     backup_dir_prompt
