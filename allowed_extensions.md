@@ -1,0 +1,17 @@
+mp3
+mp4
+wav
+ogg
+odt
+ods
+xls
+xlsx
+doc
+docx
+pdf
+jpg
+jpeg
+png
+bmp
+sh
+md
