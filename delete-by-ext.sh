@@ -14,7 +14,6 @@ pkg_check_install() {
         sudo apt-get install zenity
         zenity_state=true
     fi
-    sleep 1.5
 }
 
 # Choix du dossier de recherche
@@ -26,10 +25,8 @@ search_dir_prompt() {
     source_dir=$(zenity --file-selection --directory)
     if [ -z "$source_dir" ]; then
         echo "=== ERREUR: Un dossier source pour la recherche est nécessaire ==="
-        sleep 2
         exit 1
     fi
-    echo
     echo "Dossier source: $source_dir"
 }
 
@@ -39,14 +36,12 @@ backup_dir_prompt() {
     echo "=== Choisir le dossier de destination pour la sauvegarde des fichiers ==="
     echo "Appuyer sur [ENTRÉE] pour ouvrir l'explorateur..."
     read -r
-    sleep 2
+
     backup_dir=$(zenity --file-selection --directory)
     if [ -z "$backup_dir" ]; then
         echo "=== ERREUR: Un dossier cible pour la sauvegarde est nécessaire ==="
-        sleep 2
         exit 1
     fi
-    echo
     echo "Dossier de sauvegarde: $backup_dir"
 }
 
@@ -64,6 +59,10 @@ build_find_cmd() {
 
 # Lancement de la commande finale
 run_find_cmd() {
+    echo
+    echo "Appuyer sur [ENTRÉE] pour lancer la sauvegarde"
+    echo "==== DÉMARRAGE DE LA SAUVEGARDE ===="
+
     eval "$find_cmd" | while read -r file; do
         cp "$file" "$backup_dir"
         echo "File: \"$file\" saved"
@@ -92,10 +91,14 @@ main() {
     echo
     echo "=====   RÉCUPÉRATION DES FICHIERS   ====="
     pkg_check_install
+    sleep 1
     search_dir_prompt
+    sleep 1.5
     backup_dir_prompt
+    sleep 1.5
     build_find_cmd
     run_find_cmd
+    sleep 1.5
     pkg_uninstall
     quit
 }
