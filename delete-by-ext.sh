@@ -65,7 +65,7 @@ run_find_cmd() {
 
     eval "$find_cmd" | while read -r file; do
         cp "$file" "$backup_dir"
-        echo "File: \"$file\" saved"
+        echo "Fichier: \"$file\" sauvegardé"
     done
 }
 
